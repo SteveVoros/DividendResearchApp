@@ -5,7 +5,8 @@ namespace App
 {
     public class Stock
     {
-        public SortedDictionary<DateTime, Data> HistoricalPriceData { get; set; }
+        public SortedDictionary<DateTime, PriceData> HistoricalPriceData { get; set; }
+        public SortedDictionary<DateTime, DividendData> HistoricalDividendData { get; set; }
         public string Name { get; set; }
     }
 }
