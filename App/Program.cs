@@ -11,28 +11,26 @@ namespace App
     {
         static void Main(string[] args)
         {
-            string appDirectory = Directory.GetCurrentDirectory();
-            string filePath = appDirectory + "/../Data/Price/APU.csv";
-            Console.WriteLine(filePath);
-            if(!File.Exists(filePath))
-            {
-                Console.WriteLine("No file has been found.");
-                return;
-            }
+            string dataDirectory = Directory.GetCurrentDirectory() + "/../Data/Price/";
+            string[] files = Directory.GetFiles(dataDirectory);
 
-            string CSVString = File.ReadAllText(filePath);
-            CsvReader csv = new CsvReader(new StringReader(CSVString));
-            csv.Configuration.RegisterClassMap<PriceListCSVMap>();
-            csv.Configuration.Delimiter = ",";
-            csv.Configuration.HeaderValidated = null;
-            csv.Configuration.MissingFieldFound = null;
-            List<PriceList> prices = csv.GetRecords<PriceList>().ToList();
-            Console.WriteLine("Date has been imported.");
-
-            foreach (var item in prices)
+            foreach (var file in files)
             {
-                Console.WriteLine(item.Date);
-                Console.WriteLine(item.High);
+                if (!File.Exists(file))
+                {
+                    Console.WriteLine("File at {0} was not found.", file);
+                    continue;
+                }
+
+                string CSVString = File.ReadAllText(file);
+                using (CsvReader csv = new CsvReader(new StringReader(CSVString)))
+                {
+                    csv.Configuration.RegisterClassMap<PriceListCSVMap>();
+                    csv.Configuration.Delimiter = ",";
+                    csv.Configuration.HeaderValidated = null;
+                    csv.Configuration.MissingFieldFound = null;
+                    List<PriceList> prices = csv.GetRecords<PriceList>().ToList();
+                }
             }
         }
     }
@@ -44,6 +42,7 @@ namespace App
             Map(m => m.Date).Name("Date");
             Map(m => m.Open).Name("Open");
             Map(m => m.Close).Name("Close");
+            Map(m => m.AdjustedClose).Name("Adj Close");
             Map(m => m.High).Name("High");
             Map(m => m.Low).Name("Low");
         }
