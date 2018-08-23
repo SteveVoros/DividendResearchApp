@@ -7,10 +7,6 @@ namespace App
     {
         public SortedDictionary<DateTime, PriceData> HistoricalPriceData { get; set; }
         public SortedDictionary<DateTime, DividendData> HistoricalDividendData { get; set; }
-        public string Name { get; set; }
-        // public Stock(string stockName, List<PriceData> priceData, List<DividendData> dividendData)
-        // {
-
-        // }
+        public string Symbol { get; set; }
     }
 }

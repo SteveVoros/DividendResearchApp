@@ -9,7 +9,7 @@ namespace App
 {
     public class Data
     {
-        public List<Stock> Stocks { get; private set; }
+        public Dictionary<string, Stock> Stocks { get; private set; }
         private readonly string _workingDirectory;
         private readonly string _priceDataDirectory;
         private readonly string _dividendDataDirectory;
@@ -33,7 +33,26 @@ namespace App
 
             foreach (var file in files)
             {
-                List<PriceData> stockPrices = GetStockPriceData(file);
+                var stockPrices = GetStockPriceData(file);
+                var stockSymbol = Path.GetFileNameWithoutExtension(file);
+
+                this.Stocks.Add(stockSymbol, new Stock {
+                    Symbol = stockSymbol,
+                    HistoricalPriceData = new SortedDictionary<DateTime, PriceData>(stockPrices.ToDictionary(p => p.Date, p => p))
+                });
+            }
+        }
+
+        private void ImportDividendData()
+        {
+            string[] files = Directory.GetFiles(_dividendDataDirectory);
+
+            foreach (var file in files)
+            {
+                var stockDividends = GetStockDividendData(file);
+                var stockSymbol = Path.GetFileNameWithoutExtension(file);
+
+                this.Stocks[stockSymbol].HistoricalDividendData = new SortedDictionary<DateTime, DividendData>(stockDividends.ToDictionary(d => d.Date, d => d));
             }
         }
 
@@ -81,11 +100,6 @@ namespace App
             }
 
             return dividends;
-        }
-
-        private void ImportDividendData()
-        {
-
         }
     }
 
