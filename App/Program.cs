@@ -9,7 +9,11 @@ namespace App
     {
         static void Main(string[] args)
         {
-            var data = new Data();
+            var stocks = new Data().Stocks;
+            foreach (var stock in stocks)
+            {
+                Console.WriteLine();
+            }
         }
     }
 }

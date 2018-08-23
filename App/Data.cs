@@ -19,9 +19,13 @@ namespace App
             _workingDirectory = Directory.GetCurrentDirectory();
             _priceDataDirectory = _workingDirectory + "/../Data/Price/";
             _dividendDataDirectory = _workingDirectory + "/../Data/Dividend/";
+
+            this.Stocks = new Dictionary<string, Stock>();
+
+            this.ImportData();
         }
 
-        public void Import()
+        private void ImportData()
         {
             ImportPriceData();
             ImportDividendData();
@@ -33,8 +37,8 @@ namespace App
 
             foreach (var file in files)
             {
-                var stockPrices = GetStockPriceData(file);
                 var stockSymbol = Path.GetFileNameWithoutExtension(file);
+                var stockPrices = GetStockPriceData(file);
 
                 this.Stocks.Add(stockSymbol, new Stock {
                     Symbol = stockSymbol,
