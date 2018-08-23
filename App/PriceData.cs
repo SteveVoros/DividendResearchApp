@@ -5,7 +5,12 @@ namespace App
 {
     public class PriceData
     {
-        public Price Price { get; set; }
-        public double Volume { get; set; }
+        public DateTime Date { get; set; }
+        public decimal Open { get; set; }
+        public decimal Close { get; set; }
+        public decimal AdjustedClose { get; set; }
+        public decimal High { get; set; }
+        public decimal Low { get; set; }
+        public float Volume { get; set; }
     }
 }
