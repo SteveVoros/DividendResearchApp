@@ -10,10 +10,6 @@ namespace App
         static void Main(string[] args)
         {
             var stocks = new Data().Stocks;
-            foreach (var stock in stocks)
-            {
-                Console.WriteLine();
-            }
         }
     }
 }
