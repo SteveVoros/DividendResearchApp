@@ -1,5 +1,7 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace App
 {
@@ -17,6 +19,7 @@ namespace App
             this._stocksData = data.Stocks;
             this.Stocks = new Dictionary<string, SortedDictionary<DateTime, Transaction>>();
             CreateBuys();
+            CreateSells();
         }
 
         private void CreateBuys()
@@ -34,7 +37,7 @@ namespace App
                 {
                     var date = dividend.Key;
 
-                    if (priceData.GetValueOrDefault(date) != null)
+                    if (priceData.ContainsKey(date))
                     {
                         var buyPrice = priceData[date].Close;
                         this.Stocks[stockSymbol].Add(date, new Transaction()
@@ -49,7 +52,35 @@ namespace App
 
         private void CreateSells()
         {
+            foreach (var stock in Stocks)
+            {
+                var stockSymbol = stock.Key;
+                foreach (var transaction in stock.Value)
+                {
+                    var buyDate = transaction.Value.Buy.Date;
+                    var buyPrice = transaction.Value.Buy.Price;
+                    var priceData = _stocksData[stockSymbol].HistoricalPriceData;
 
+                    var startIndex = priceData.Keys.Where(d => d == buyDate).First();
+
+                    int index = 0;
+                    while(index < priceData.Count)
+                    {
+                        var dailyPriceHigh = priceData.ElementAt(index).Value.High;
+
+                        if(dailyPriceHigh > buyPrice)
+                        {
+                            var sellDate = priceData.ElementAt(index).Key;
+                            this.Stocks[stockSymbol][buyDate].Sell = new Sell {
+                                Date = sellDate,
+                                Price = dailyPriceHigh
+                            };
+                        }
+
+                        index++;
+                    }
+                }
+            }
         }
     }
 }
