@@ -15,6 +15,8 @@ namespace App
         public Transactions(Data data)
         {
             this._stocksData = data.Stocks;
+            this.Stocks = new Dictionary<string, SortedDictionary<DateTime, Transaction>>();
+            CreateBuys();
         }
 
         private void CreateBuys()
@@ -31,12 +33,16 @@ namespace App
                 foreach (var dividend in dividendData)
                 {
                     var date = dividend.Key;
-                    var buyPrice = priceData[date].Close;
 
-                    this.Stocks[stockSymbol].Add(date, new Transaction() {
-                        Buy = new Buy { Date = date, Price = buyPrice },
-                        Sell = new Sell()
-                    });
+                    if (priceData.GetValueOrDefault(date) != null)
+                    {
+                        var buyPrice = priceData[date].Close;
+                        this.Stocks[stockSymbol].Add(date, new Transaction()
+                        {
+                            Buy = new Buy { Date = date, Price = buyPrice },
+                            Sell = new Sell()
+                        });
+                    }
                 }
             }
         }
