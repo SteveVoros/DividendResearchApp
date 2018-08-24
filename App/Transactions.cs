@@ -61,11 +61,16 @@ namespace App
                     var buyPrice = transaction.Value.Buy.Price;
                     var priceData = _stocksData[stockSymbol].HistoricalPriceData;
 
-                    var startIndex = priceData.Keys.Where(d => d == buyDate).First();
-
                     int index = 0;
                     while(index < priceData.Count)
                     {
+                        var dateAtIndex = priceData.ElementAt(index).Key;
+                        if(dateAtIndex <= buyDate)
+                        {
+                            index++;
+                            continue;
+                        }
+                        
                         var dailyPriceHigh = priceData.ElementAt(index).Value.High;
 
                         if(dailyPriceHigh > buyPrice)
@@ -75,6 +80,7 @@ namespace App
                                 Date = sellDate,
                                 Price = dailyPriceHigh
                             };
+                            break;
                         }
 
                         index++;
