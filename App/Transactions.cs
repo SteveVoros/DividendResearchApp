@@ -64,22 +64,20 @@ namespace App
                     int index = 0;
                     while(index < priceData.Count)
                     {
-                        var dateAtIndex = priceData.ElementAt(index).Key;
+                        var priceDataAtIndex = priceData.ElementAt(index);
+                        var dateAtIndex = priceDataAtIndex.Key;
                         if(dateAtIndex <= buyDate)
                         {
                             index++;
                             continue;
                         }
                         
-                        var dailyPriceHigh = priceData.ElementAt(index).Value.High;
+                        var dailyPriceHigh = priceDataAtIndex.Value.High;
 
                         if(dailyPriceHigh > buyPrice)
                         {
-                            var sellDate = priceData.ElementAt(index).Key;
-                            this.Stocks[stockSymbol][buyDate].Sell = new Sell {
-                                Date = sellDate,
-                                Price = dailyPriceHigh
-                            };
+                            this.Stocks[stockSymbol][buyDate].Sell.Date = dateAtIndex;
+                            this.Stocks[stockSymbol][buyDate].Sell.Price = dailyPriceHigh;
                             break;
                         }
 
