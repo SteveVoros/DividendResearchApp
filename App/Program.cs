@@ -9,7 +9,9 @@ namespace App
     {
         static void Main(string[] args)
         {
-            var stocks = new Data().Stocks;
+            var data = new Data();
+
+            var transactions = new Transactions(data);
         }
     }
 }
