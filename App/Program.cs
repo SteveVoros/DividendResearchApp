@@ -10,8 +10,10 @@ namespace App
         static void Main(string[] args)
         {
             var data = new Data();
-
             var transactions = new Transactions(data);
+            var historicalAnalysis = new Analysis(transactions, 100);
+            historicalAnalysis.Calculate();
+            historicalAnalysis.PrintResults();
         }
     }
 }
