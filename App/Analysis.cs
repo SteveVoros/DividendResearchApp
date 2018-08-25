@@ -35,6 +35,10 @@ namespace App
             Console.WriteLine("Number of no sells: {0}", NumberOfNoSells);
             Console.WriteLine("Average number of days: {0:N2}", AverageNumberOfDays);
             Console.WriteLine("Standard deviation of days: {0:N2}", StandardDeviationOfDays);
+            Console.WriteLine("List of Days:\r");
+            DaysList.ForEach(d => Console.Write("{0} ", d));
+            Console.WriteLine("\n\r");
+
         }
 
         private void CalculateAverageNumberofDays()
@@ -60,6 +64,7 @@ namespace App
                     if(dateDifference.Days > MaxDaysLimit)
                     {
                         NumberOfTransactionsOverLimit++;
+                        continue;
                     }
 
                     DaysList.Add(dateDifference.Days);
