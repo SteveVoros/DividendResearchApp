@@ -33,8 +33,8 @@ namespace App
             Console.WriteLine("Number of transactions: {0}", NumberOfTransactions);
             Console.WriteLine("Number of transactions over limit: {0}", NumberOfTransactionsOverLimit);
             Console.WriteLine("Number of no sells: {0}", NumberOfNoSells);
-            Console.WriteLine("Average number of days: {0}", AverageNumberOfDays);
-            Console.WriteLine("Standard deviation of days: {0}", StandardDeviationOfDays);
+            Console.WriteLine("Average number of days: {0:N2}", AverageNumberOfDays);
+            Console.WriteLine("Standard deviation of days: {0:N2}", StandardDeviationOfDays);
         }
 
         private void CalculateAverageNumberofDays()
@@ -68,7 +68,7 @@ namespace App
                 }
             }
 
-            AverageNumberOfDays = SumOfDays / NumberOfTransactions;
+            AverageNumberOfDays = (double) SumOfDays / NumberOfTransactions;
         }
 
         private void CalculateStandardDeviationOfDays()
