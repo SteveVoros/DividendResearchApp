@@ -38,7 +38,6 @@ namespace App
             Console.WriteLine("List of Days:\r");
             DaysList.ForEach(d => Console.Write("{0} ", d));
             Console.WriteLine("\n\r");
-
         }
 
         private void CalculateAverageNumberofDays()
