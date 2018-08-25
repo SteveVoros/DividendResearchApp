@@ -11,6 +11,7 @@ namespace App
         public int NumberOfTransactions { get; private set; }
         public int SumOfDays { get; private set; }
         public int NumberOfTransactionsOverLimit { get; private set; }
+        public double PercentageOfFailingToSell { get; private set; }
         public int NumberOfNoSells { get; private set; }
         public List<int> DaysList { get; private set; }
         public int MaxDaysLimit { get; set; }
@@ -33,6 +34,7 @@ namespace App
             Console.WriteLine("Number of transactions: {0}", NumberOfTransactions);
             Console.WriteLine("Number of transactions over limit: {0}", NumberOfTransactionsOverLimit);
             Console.WriteLine("Number of no sells: {0}", NumberOfNoSells);
+            Console.WriteLine("Percentage of failing to sell: {0:N2}", PercentageOfFailingToSell);
             Console.WriteLine("Average number of days: {0:N2}", AverageNumberOfDays);
             Console.WriteLine("Standard deviation of days: {0:N2}", StandardDeviationOfDays);
             Console.WriteLine("List of Days:\r");
@@ -63,7 +65,7 @@ namespace App
                     if(dateDifference.Days > MaxDaysLimit)
                     {
                         NumberOfTransactionsOverLimit++;
-                        continue;
+                        // continue;
                     }
 
                     DaysList.Add(dateDifference.Days);
@@ -79,7 +81,8 @@ namespace App
         {   
             double avg = DaysList.Average();   
             double sum = DaysList.Sum(d => Math.Pow(d - avg, 2));  
-            StandardDeviationOfDays = Math.Sqrt((sum) / (DaysList.Count()-1)); 
+            StandardDeviationOfDays = Math.Sqrt((sum) / (DaysList.Count()-1));
+            PercentageOfFailingToSell = (double) (NumberOfNoSells + NumberOfTransactionsOverLimit) / NumberOfTransactions;
         }
     }
 }
