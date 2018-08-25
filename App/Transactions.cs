@@ -35,19 +35,39 @@ namespace App
 
                 foreach (var dividend in dividendData)
                 {
-                    var date = dividend.Key;
+                    var buyDate = GetBuyDate(dividend.Key, priceData);
+                    // var buyDate = dividend.Key;
 
-                    if (priceData.ContainsKey(date))
+                    if (buyDate != DateTime.MinValue && !this.Stocks[stockSymbol].ContainsKey(buyDate) && priceData.ContainsKey(buyDate))
                     {
-                        var buyPrice = priceData[date].Close;
-                        this.Stocks[stockSymbol].Add(date, new Transaction()
+                        var buyPrice = priceData[buyDate].Close;
+                        this.Stocks[stockSymbol].Add(buyDate, new Transaction()
                         {
-                            Buy = new Buy { Date = date, Price = buyPrice },
+                            Buy = new Buy { Date = buyDate, Price = buyPrice },
                             Sell = new Sell()
                         });
                     }
                 }
             }
+        }
+
+        private DateTime GetBuyDate(DateTime exDividendDate, SortedDictionary<DateTime, PriceData> priceData)
+        {
+            var dayBeforeExDividendDate = exDividendDate.AddDays(-1);
+
+            if (priceData.ContainsKey(dayBeforeExDividendDate))
+                return dayBeforeExDividendDate;
+
+            var firstDateInPriceData = priceData.First().Key;
+            while (!priceData.ContainsKey(dayBeforeExDividendDate))
+            {
+                if (firstDateInPriceData > dayBeforeExDividendDate)
+                    return DateTime.MinValue;
+
+                dayBeforeExDividendDate = dayBeforeExDividendDate.AddDays(-1);
+            }
+
+            return dayBeforeExDividendDate;
         }
 
         private void CreateSells()
@@ -62,19 +82,19 @@ namespace App
                     var priceData = _stocksData[stockSymbol].HistoricalPriceData;
 
                     int index = 0;
-                    while(index < priceData.Count)
+                    while (index < priceData.Count)
                     {
                         var priceDataAtIndex = priceData.ElementAt(index);
                         var dateAtIndex = priceDataAtIndex.Key;
-                        if(dateAtIndex <= buyDate)
+                        if (dateAtIndex <= buyDate)
                         {
                             index++;
                             continue;
                         }
-                        
+
                         var dailyPriceHigh = priceDataAtIndex.Value.High;
 
-                        if(dailyPriceHigh > buyPrice)
+                        if (dailyPriceHigh > buyPrice)
                         {
                             this.Stocks[stockSymbol][buyDate].Sell.Date = dateAtIndex;
                             this.Stocks[stockSymbol][buyDate].Sell.Price = dailyPriceHigh;
